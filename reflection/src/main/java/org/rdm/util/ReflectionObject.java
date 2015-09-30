@@ -100,8 +100,8 @@ public abstract class ReflectionObject
         }
         catch (ClassNotFoundException ignored)
         {
+            throw new NullPointerException("Unable to find class for \"" + this.className() + "\"");
         }
-        return null;
     }
 
     public static Object newInstance(Class class_, Object... args)
