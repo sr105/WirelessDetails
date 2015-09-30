@@ -4,33 +4,50 @@ import java.lang.reflect.Field;
 import java.net.InetAddress;
 
 // inspired by http://stackoverflow.com/a/10309323/47078
+@SuppressWarnings("unused")
 public abstract class ReflectionObject
 {
+    // Override this in base classes:
+    public String className() { return null; }
+
+    /*************************************************************************/
+
     private static final String TAG = ReflectionObject.class.getSimpleName();
 
-    protected Object mObject;
-    protected Class mClass;
+    protected final Object mObject;
+    protected final Class mClass;
 
-    public ReflectionObject(Object object, String className) throws ClassNotFoundException
+    // Pass in an existing object...
+    public ReflectionObject(Object object)
     {
-        mClass = Class.forName(className);
-
+        mClass = getClassType();
+        //noinspection ConstantConditions
         if (!mClass.isInstance(object))
         {
-            throw new IllegalArgumentException("object must be of type " + className);
+            throw new IllegalArgumentException("object must be of type " + mClass.getCanonicalName());
         }
         mObject = object;
     }
 
-    public ReflectionObject(String className, Object... args) throws ClassNotFoundException
+    // Create a new object with the default constructor
+    public ReflectionObject()
     {
-        this(newInstance(className, args), className);
+        mClass = getClassType();
+        mObject = newInstance(mClass);
     }
 
-    public ReflectionObject(String className, Class[] types,
-                            Object... args) throws ClassNotFoundException
+    // Create a new object using a constructor matching the types of args
+    public ReflectionObject(Object... args)
     {
-        this(newInstance(className, types, args), className);
+        mClass = getClassType();
+        mObject = newInstance(mClass, args);
+    }
+
+    // Create a new object using a constructor matching types
+    public ReflectionObject(Class[] types, Object... args)
+    {
+        mClass = getClassType();
+        mObject = newInstance(mClass, types, args);
     }
 
     @Override
@@ -53,6 +70,7 @@ public abstract class ReflectionObject
 
         ReflectionObject that = (ReflectionObject) o;
 
+        //noinspection SimplifiableIfStatement
         if (mObject != null ? !mObject.equals(that.mObject) : that.mObject != null)
         {
             return false;
@@ -74,17 +92,29 @@ public abstract class ReflectionObject
         return mObject;
     }
 
-    public static Object newInstance(String className, Object... args)
-    {
-        Class[] types = ReflectionUtils.getParameterTypes(args);
-        return newInstance(className, types, args);
-    }
-
-    public static Object newInstance(String className, Class[] types, Object... args)
+    private Class getClassType()
     {
         try
         {
-            return ReflectionUtils.instantiateClass(Class.forName(className), args, types);
+            return Class.forName(this.className());
+        }
+        catch (ClassNotFoundException ignored)
+        {
+        }
+        return null;
+    }
+
+    public static Object newInstance(Class class_, Object... args)
+    {
+        Class[] types = ReflectionUtils.getParameterTypes(args);
+        return newInstance(class_, types, args);
+    }
+
+    public static Object newInstance(Class class_, Class[] types, Object... args)
+    {
+        try
+        {
+            return ReflectionUtils.instantiateClass(class_, args, types);
         }
         catch (Exception e)
         {
@@ -188,9 +218,10 @@ public abstract class ReflectionObject
     }
 
     public static void setEnumField(Object obj, String value, String name)
-            throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+            throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ClassCastException
     {
         Field f = obj.getClass().getField(name);
+        //noinspection unchecked
         f.set(obj, Enum.valueOf((Class<Enum>) f.getType(), value));
     }
 

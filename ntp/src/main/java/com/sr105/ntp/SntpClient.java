@@ -12,12 +12,7 @@ import java.util.Date;
  */
 public class SntpClient extends ReflectionObject
 {
-    private static final String className = "android.net.SntpClient";
-
-    public SntpClient() throws ClassNotFoundException
-    {
-        super(className);
-    }
+    public final String className() { return "android.net.SntpClient"; }
 
     /**
      * Sends an SNTP request to the given host and processes the response.

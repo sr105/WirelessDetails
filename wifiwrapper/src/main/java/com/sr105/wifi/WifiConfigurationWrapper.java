@@ -282,13 +282,13 @@ public class WifiConfigurationWrapper
      * ****** Wrapped helper classes ********
      */
 
-    public class LinkPropertiesWrapped extends ReflectionObject
+    public static class LinkPropertiesWrapped extends ReflectionObject
     {
-        private static final String className = "android.net.LinkProperties";
+        public String className() { return "android.net.LinkProperties"; }
 
         public LinkPropertiesWrapped(Object object) throws ClassNotFoundException
         {
-            super(object, className);
+            super(object);
         }
 
         void setHttpProxy(ProxyPropertiesWrapped proxyPropertiesWrapped)
@@ -366,17 +366,17 @@ public class WifiConfigurationWrapper
 
     public static class ProxyPropertiesWrapped extends ReflectionObject
     {
-        private static final String className = "android.net.ProxyProperties";
+        public final String className() { return "android.net.ProxyProperties"; }
 
         public ProxyPropertiesWrapped(Object object) throws ClassNotFoundException
         {
-            super(object, className);
+            super(object);
         }
 
         public ProxyPropertiesWrapped(String host, int port,
                                       String exclusionList) throws ClassNotFoundException
         {
-            super(className, new Class[] {String.class, int.class, String.class}, host, port, exclusionList);
+            super(new Class[] {String.class, int.class, String.class}, host, port, exclusionList);
         }
 
         public String getHost()
@@ -392,17 +392,17 @@ public class WifiConfigurationWrapper
 
     public static class LinkAddressWrapped extends ReflectionObject
     {
-        private static final String className = "android.net.LinkAddress";
+        public final String className() { return "android.net.LinkAddress"; }
 
         public LinkAddressWrapped(Object object) throws ClassNotFoundException
         {
-            super(object, className);
+            super(object);
         }
 
         public LinkAddressWrapped(InetAddress inetAddress,
                                   int prefixLength) throws ClassNotFoundException
         {
-            super(className, new Class[] {InetAddress.class, int.class}, inetAddress, prefixLength);
+            super(new Class[] {InetAddress.class, int.class}, inetAddress, prefixLength);
         }
 
         public InetAddress getAddress()
@@ -418,16 +418,16 @@ public class WifiConfigurationWrapper
 
     public static class RouteInfoWrapped extends ReflectionObject
     {
-        private static final String className = "android.net.RouteInfo";
+        public final String className() { return "android.net.RouteInfo"; }
 
         public RouteInfoWrapped(Object object) throws ClassNotFoundException
         {
-            super(object, className);
+            super(object);
         }
 
         public RouteInfoWrapped(InetAddress inetAddress) throws ClassNotFoundException
         {
-            super(className, new Class[] {InetAddress.class}, inetAddress);
+            super(new Class[] {InetAddress.class}, inetAddress);
         }
 
         public InetAddress getGateway()
