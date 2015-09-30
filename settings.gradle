@@ -1,1 +1,1 @@
-include ':app', ':wifiwrapper', ':reflection'
+include ':app', ':wifiwrapper', ':reflection', ':ntp'

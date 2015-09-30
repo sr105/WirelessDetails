@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/ntp" />
             <option value="$PROJECT_DIR$/reflection" />
             <option value="$PROJECT_DIR$/wifiwrapper" />
           </set>
