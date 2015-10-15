@@ -15,7 +15,9 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextView;
+    private TextView mBuildTimeTextView;
+    private TextView mNtpTimeTextView;
+    private TextView mWifiDetailsTextView;
 
     private boolean mDoNtpExample = true;
     private boolean mDoWifiExample = true;
@@ -24,40 +26,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTextView = (TextView) findViewById(R.id.textView);
+        mBuildTimeTextView = (TextView) findViewById(R.id.buildTime);
         final String text = "Build Time: " + new ExtraAppInfo(this).buildTime().toString() + "\n";
-        mTextView.setText(text);
-        if (mDoNtpExample)
-            addNtpTimeToTextView();
-        else
-            addWifiInfoToTextView();
+        mBuildTimeTextView.setText(text);
+
+        mNtpTimeTextView = (TextView) findViewById(R.id.ntpTime);
+        mWifiDetailsTextView = (TextView) findViewById(R.id.wifiDetails);
+
+        addNtpTimeToTextView();
+        addWifiInfoToTextView();
     }
 
     public void addNtpTimeToTextView() {
-        AsyncTask<String, Void, Date> task = new AsyncTask<String, Void, Date>() {
-            @Override
-            protected Date doInBackground(String[] params) {
-                return SntpClient.getTime(params[0], 20000);
-            }
-
-            @Override
-            protected void onPostExecute(Date date) {
-                String text = mTextView.getText().toString();
-                mTextView.setText(text + "NTP Time: " + date + "\n");
-                addWifiInfoToTextView();
-            }
-        };
-        task.execute("2.android.pool.ntp.org");
+        if (!mDoNtpExample)
+            return;
+        RecurringAndroidTask.run(mGetNtpTimeRunnable, 1000);
     }
+
+    private final Runnable mGetNtpTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            AsyncTask<String, Void, Date> task = new AsyncTask<String, Void, Date>() {
+                @Override
+                protected Date doInBackground(String[] params) {
+                    return SntpClient.getTime(params[0], 20000);
+                }
+
+                @Override
+                protected void onPostExecute(Date date) {
+                    mNtpTimeTextView.setText("NTP Time: " + date + "\n");
+                }
+            };
+            task.execute("2.android.pool.ntp.org");
+        }
+    };
 
     public void addWifiInfoToTextView() {
         if (!mDoWifiExample)
             return;
-        String text = mTextView.getText().toString();
         WifiUtils.sContext = this;
         WifiConfigurationWrapper wifi = WifiUtils.getCurrentWifiConfig();
-        String wifiText = "\n" + WifiUtils.logWifi(wifi, "Current");
-        mTextView.setText(text + wifiText);
+        mWifiDetailsTextView.setText(WifiUtils.logWifi(wifi, "Current"));
     }
 
     @Override

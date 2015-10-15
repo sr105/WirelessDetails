@@ -93,8 +93,8 @@
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
-    <orderEntry type="module" module-name="ntp" exported="" />
-    <orderEntry type="module" module-name="reflection" exported="" />
     <orderEntry type="module" module-name="wifiwrapper" exported="" />
+    <orderEntry type="module" module-name="reflection" exported="" />
+    <orderEntry type="module" module-name="ntp" exported="" />
   </component>
 </module>

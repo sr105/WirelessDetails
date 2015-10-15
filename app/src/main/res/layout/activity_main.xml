@@ -9,8 +9,19 @@
                 tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:text="@string/hello_world"
+        android:id="@+id/buildTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"/>
+    <TextView
+        android:id="@+id/ntpTime"
+        android:layout_below="@+id/buildTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"/>
+    <TextView
+        android:id="@+id/wifiDetails"
+        android:layout_below="@+id/ntpTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"/>
